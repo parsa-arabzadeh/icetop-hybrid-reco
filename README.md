@@ -38,7 +38,7 @@ $$N_e(X_{\mathrm{obs}}) = N_{\max} \left( \frac{X_{\mathrm{obs}} - X_0}{X_{\max}
 ![Hadronic Models Coincidence](plots/hadronic_models_coincidence.png)
 
 * **Left Panel (Mass Separation):** Following the Heitler-Matthews superposition scaling ($N_\mu \propto A^{1-\beta} E_0^\beta$), heavier primaries ($A=56$) yield systematically higher TeV muon multiplicities for a fixed surface electromagnetic size $N_e$ compared to proton primaries ($A=1$).
-* **Right Panel (Model Spread):** Highlights the $10\%\text{--}15\%$ systematic spread in high-energy muon predictions among `Sibyll 2.3d`, `EPOS-LHC`, and `QGSJet-II-04`.
+* **Right Panel (Model Spread):** Highlights the **10% to 15%** systematic spread in high-energy muon predictions among `Sibyll 2.3d`, `EPOS-LHC`, and `QGSJet-II-04`.
 
 ---
 
@@ -46,7 +46,7 @@ $$N_e(X_{\mathrm{obs}}) = N_{\max} \left( \frac{X_{\mathrm{obs}} - X_0}{X_{\max}
 
 Surface scintillation detector stations are arranged on a regular $7 \times 7$ grid with $50\ \mathrm{m}$ spacing. For an incoming shower axis $\hat{\mathbf{n}} = (-\sin\theta\cos\phi, -\sin\theta\sin\phi, -\cos\theta)$ and core location $\mathbf{r}_c = (x_c, y_c)$, station coordinates $\mathbf{r}_i$ are projected into the perpendicular shower plane:
 
-$$d_{\parallel, i} = (\mathbf{r}_i - \mathbf{r}_c) \cdot \hat{\mathbf{n}}, \qquad r_{\perp, i} = \sqrt{\vert{}\mathbf{r}_i - \mathbf{r}_c\vert{}^2 - d_{\parallel, i}^2}$$
+$$d_{\parallel, i} = (\mathbf{r}_i - \mathbf{r}_c) \cdot \hat{\mathbf{n}}, \qquad r_{\perp, i} = \sqrt{\Vert{}\mathbf{r}_i - \mathbf{r}_c\Vert{}^2 - d_{\parallel, i}^2}$$
 
 Local particle densities are parameterized using a Nishimura-Kamata-Greisen (NKG) lateral distribution function normalized to the standard IceTop reference distance $R_{\mathrm{ref}} = 125\ \mathrm{m}$ ($S_{125}$), where Molière radius $R_{\mathrm{M}} = 125\ \mathrm{m}$ and shower age $s = 1.25$:
 
@@ -56,7 +56,7 @@ Station signals incorporate Poisson photoelectron statistics, Gaussian electroni
 
 $$t_{\mathrm{exp}, i} = t_0 + \frac{d_{\parallel, i}}{c} + a_{\mathrm{curv}} \, r_{\perp, i}^2$$
 
-A geomagnetic radio amplitude proxy scaling with the Lorentz force ($\mathcal{E}_{\mathrm{radio}} \propto S_{125} \, \vert{}\hat{\mathbf{n}} \times \hat{\mathbf{B}}\vert{} \, e^{-r_\perp / r_0}$ for South Pole magnetic field inclination $I \approx -72^\circ$) is also implemented in the array module.
+A geomagnetic radio amplitude proxy scaling with the Lorentz force ($E_{\mathrm{radio}} \propto S_{125} \sin\alpha \, \exp(-r_\perp / r_0)$, where $\alpha$ is the geomagnetic angle for the South Pole field inclination $I \approx -72^\circ$) is also implemented in the array module.
 
 ![Simulated Event Footprint](plots/array_event_footprint.png)
 
@@ -99,13 +99,8 @@ pip install -r requirements.txt
 Run the simulation and reconstruction modules sequentially from the repository root:
 
 ```bash
-# 1. Solve atmospheric cascade equations and compare hadronic models
 python3 src/hadronic_mceq.py
-
-# 2. Generate single-event surface array footprint and LDF profile
 python3 src/icetop_array.py
-
-# 3. Run Monte Carlo reconstruction benchmark with iminuit
 python3 src/run_reconstruction.py
 ```
 
