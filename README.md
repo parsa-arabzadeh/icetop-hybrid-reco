@@ -115,5 +115,5 @@ python3 src/run_reconstruction.py
 
 ## Author
 **Parsa Arabzadeh**  
-MSc in Physics
+MSc in Physics,
 University of Tehran
