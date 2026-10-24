@@ -16,7 +16,7 @@ plt.rcParams.update({
 })
 
 class ShowerReconstructor:
-    def __init__(self, array: SurfaceHybridArray):
+    def __init__(self, array):
         self.array = array
         self.pos = array.coords
         self.c_ns = 0.299792458
