@@ -22,7 +22,6 @@ class SurfaceHybridArray:
         self.coords = np.column_stack([xx.ravel(), yy.ravel()])
         self.n_det = len(self.coords)
 
-        # South Pole geomagnetic field inclination (~72 deg, B ~ 55 uT)
         # Unit vector in local coordinate system
         b_inc = np.radians(-72.0)
         self.b_hat = np.array([0.0, np.cos(b_inc), np.sin(b_inc)])
