@@ -52,14 +52,14 @@ def solve_southpole_showers():
     )
 
     x_obs = mceq.density_model.h2X(h_obs_cm)
-    print(f"[INFO] Observation depth at h=2835m: X = {x_obs:.1f} g/cm2")
+    print(f"Observation depth at h=2835m: X = {x_obs:.1f} g/cm2")
 
     e_grid = mceq.e_grid
     de = mceq.e_widths
     mask_mu_ice = e_grid >= 500.0
 
     for m in models:
-        print(f"[INFO] Running MCEq for {labels[m]}...")
+        print(f"Running MCEq for {labels[m]}...")
         mceq.set_interaction_model(m)
         
         for p_key, cid, a_mass in [("p", 14, 1), ("Fe", 5626, 56)]:
@@ -114,7 +114,6 @@ def solve_southpole_showers():
     plt.close()
 
     np.savez("data/mceq_southpole.npz", e0_gev=e0_grid_gev, x_obs=x_obs, results=out)
-    print("[INFO] Saved data/mceq_southpole.npz and plots/hadronic_models_coincidence.png")
 
 if __name__ == "__main__":
     solve_southpole_showers()
