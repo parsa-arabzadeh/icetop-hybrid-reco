@@ -1,9 +1,9 @@
 # Surface Hybrid Array Simulation & Air-Shower Reconstruction for IceTop/IceCube
 
-This repository provides a standalone simulation and event reconstruction framework for cosmic-ray extensive air showers (EAS) at the South Pole ($h = 2835\ \mathrm{m}$, atmospheric depth $X \approx 705\ \mathrm{g/cm^2}$). The study addresses two core physical and experimental challenges relevant to the IceTop surface enhancement at the IceCube Neutrino Observatory:
+This repository contains a small, learning-oriented toy-model study of cosmic-ray extensive air showers (EAS) at the South Pole ($h = 2835\ \mathrm{m}$, atmospheric depth $X \approx 705\ \mathrm{g/cm^2}$). It is not a validated analysis chain and does not replace CORSIKA or IceTray (see *Scope and Limitations* below). The study touches two topics relevant to the IceTop surface enhancement at the IceCube Neutrino Observatory:
 
-1. **Hadronic Interaction Model Uncertainties:** Solving one-dimensional matrix cascade equations (`MCEq`) in the South Pole atmosphere to quantify high-energy in-ice muon yields ($E_\mu > 500\ \mathrm{GeV}$) and surface electromagnetic shower sizes ($N_e$) across post-LHC hadronic interaction models (`Sibyll 2.3d`, `EPOS-LHC`, and `QGSJet-II-04`).
-2. **Maximum-Likelihood Event Reconstruction:** Modeling the spatial and temporal response of a surface scintillation detector array and reconstructing the shower core position $(x_c, y_c)$, arrival direction $(\theta, \phi)$, and lateral distribution scaling parameter $S_{125}$ using `iminuit` (`MINUIT2`).
+1. **Hadronic Interaction Model Uncertainties:** Solving one-dimensional matrix cascade equations (`MCEq`) in the South Pole atmosphere to compare high-energy muon yields ($E_\mu > 500\ \mathrm{GeV}$, evaluated at the surface) across post-LHC hadronic interaction models (`Sibyll 2.3d`, `EPOS-LHC`, and `QGSJet-II-04`), together with a simple parameterization of the surface electromagnetic shower size ($N_e$).
+2. **Maximum-Likelihood Event Reconstruction:** Simulating the spatial and temporal response of a hypothetical surface scintillation detector array and reconstructing the shower core position $(x_c, y_c)$, arrival direction $(\theta, \phi)$, and lateral distribution scaling parameter $S_{125}$ using `iminuit` (`MINUIT2`).
 
 ---
 
@@ -29,7 +29,7 @@ The longitudinal evolution of the hadronic and leptonic cascade in the South Pol
 
 $$\frac{\mathrm{d}\mathbf{\Phi}}{\mathrm{d}X} = -\left( \mathbf{\Lambda}_{\mathrm{int}} + \frac{1}{\rho(X)} \mathbf{\Lambda}_{\mathrm{dec}} \right) \mathbf{\Phi} + \mathbf{S}_{\mathrm{prod}} \mathbf{\Phi}$$
 
-Air showers initiated by primary protons ($A=1$) and iron nuclei ($A=56$) are simulated across $3 \times 10^{14}\ \mathrm{eV} \le E_0 \le 10^{17}\ \mathrm{eV}$. The high-energy muon bundle yield capable of penetrating the glacial ice down to the deep IceCube optical array ($E_\mu > 500\ \mathrm{GeV}$) and the corresponding Gaisser-Hillas surface electromagnetic cascade size $N_e$ evaluated at $X_{\mathrm{obs}} = 705.3\ \mathrm{g/cm^2}$ are given by:
+Air showers initiated by primary protons ($A=1$) and iron nuclei ($A=56$) are simulated across $3 \times 10^{14}\ \mathrm{eV} \le E_0 \le 10^{17}\ \mathrm{eV}$. The muon yield above 500 GeV at the observation level (a proxy for muons able to reach the in-ice array; propagation through the ice is not simulated) is computed with `MCEq`. The surface electromagnetic size $N_e$ is **not** an `MCEq` output: it is a Gaisser-Hillas parameterization evaluated at $X_{\mathrm{obs}} = 705.3\ \mathrm{g/cm^2}$, with assumed model-dependent $X_{\max}$ shifts (Sibyll 2.3d: 0, EPOS-LHC: +6.5, QGSJet-II-04: −11 g/cm²). The two quantities are given by:
 
 $$N_\mu(E_\mu > 500\ \mathrm{GeV}) = \int_{500\ \mathrm{GeV}}^{E_0} \left[ \Phi_{\mu^-}(E, X_{\mathrm{obs}}) + \Phi_{\mu^+}(E, X_{\mathrm{obs}}) \right] \mathrm{d}E$$
 
@@ -38,13 +38,13 @@ $$N_e(X_{\mathrm{obs}}) = N_{\max} \left( \frac{X_{\mathrm{obs}} - X_0}{X_{\max}
 ![Hadronic Models Coincidence](plots/hadronic_models_coincidence.png)
 
 * **Left Panel (Mass Separation):** Following the Heitler-Matthews superposition scaling ($N_\mu \propto A^{1-\beta} E_0^\beta$), heavier primaries ($A=56$) yield systematically higher TeV muon multiplicities for a fixed surface electromagnetic size $N_e$ compared to proton primaries ($A=1$).
-* **Right Panel (Model Spread):** Highlights the **10% to 15%** systematic spread in high-energy muon predictions among `Sibyll 2.3d`, `EPOS-LHC`, and `QGSJet-II-04`.
+* **Right Panel (Model Spread):** Shows the muon yield relative to `Sibyll 2.3d`, ranging from about −8% to +13% across the three models.
 
 ---
 
 ### 2. Surface Array Response, LDF & Shower-Front Timing
 
-Surface scintillation detector stations are arranged on a regular $7 \times 7$ grid with $50\ \mathrm{m}$ spacing. For an incoming shower axis $\hat{\mathbf{n}} = (-\sin\theta\cos\phi, -\sin\theta\sin\phi, -\cos\theta)$ and core location $\mathbf{r}_c = (x_c, y_c)$, station coordinates $\mathbf{r}_i$ are projected into the perpendicular shower plane:
+Surface scintillation detector stations are arranged on a regular $7 \times 7$ grid with $50\ \mathrm{m}$ spacing (a hypothetical layout, not the real IceTop or surface-enhancement geometry). For an incoming shower axis $\hat{\mathbf{n}} = (-\sin\theta\cos\phi, -\sin\theta\sin\phi, -\cos\theta)$ and core location $\mathbf{r}_c = (x_c, y_c)$, station coordinates $\mathbf{r}_i$ are projected into the perpendicular shower plane:
 
 $$d_{\parallel, i} = (\mathbf{r}_i - \mathbf{r}_c) \cdot \hat{\mathbf{n}}, \qquad r_{\perp, i} = \sqrt{\Vert{}\mathbf{r}_i - \mathbf{r}_c\Vert{}^2 - d_{\parallel, i}^2}$$
 
@@ -74,6 +74,8 @@ $$\chi^2_{\mathrm{time}}(t_0, n_x, n_y) = \sum_{i \in \mathrm{hits}} \left( \fra
 
 $$\mathrm{NLL}(x_c, y_c, \log_{10} S_{125}) = \frac{1}{2} \sum_{i \in \mathrm{hits}} \left[ \frac{\left(S_{\mathrm{meas}, i} - S(r_{\perp, i})\right)^2}{\sigma_{S, i}^2} + \ln\left(\sigma_{S, i}^2\right) \right] + \sum_{j \in \mathrm{silent}} \mu_{\mathrm{eff}}(r_{\perp, j})$$
 
+The silent-station term uses an effective expected count with an ad-hoc scale factor of 2. The two stages run sequentially without iteration, and the timing fit uses the center of gravity (not the fitted core) as the curvature center.
+
 ![Reconstruction Performance](plots/reconstruction_performance.png)
 
 #### Monte Carlo Benchmark Summary ($N = 250$ Showers, $5^\circ \le \theta \le 35^\circ$)
@@ -85,7 +87,20 @@ $$\mathrm{NLL}(x_c, y_c, \log_{10} S_{125}) = \frac{1}{2} \sum_{i \in \mathrm{hi
 | **Energy Proxy Recovery Ratio** | $S_{125}^{\mathrm{rec}} / S_{125}^{\mathrm{true}}$ | $1.00 \pm 0.01$ (Unbiased) |
 
 ---
+## Scope and Limitations
+This is a learning-oriented toy model, not a validated analysis chain.
+- Surface N_e is a Gaisser-Hillas parameterization with assumed model-dependent
+  X_max shifts, not an output of MCEq or CORSIKA.
+- N_mu is the muon yield at the surface (E > 500 GeV); propagation through ice is not simulated.
+- The 7x7, 50 m array is hypothetical and does not represent the real IceTop layout.
+- Events are simulated and reconstructed with the same model (NKG, age, timing),
+  so the quoted resolutions test self-consistency only and are not realistic performance.
+- The radio amplitude proxy is implemented but not used in the reconstruction.
+- No actual surface/in-ice coincidence analysis is performed yet.
 
+## Possible Next Steps
+CORSIKA-based simulations, a realistic LDF and detector response, joint fits of
+S125 and N_mu, and composition-sensitive observables.
 ## Installation & Usage
 
 Clone the repository and install the required scientific Python packages:
