@@ -99,7 +99,7 @@ def run_benchmark(n_mc=250):
 
     dr_list, dpsi_list, s_ratio, s_true_list = [], [], [], []
 
-    print(f"[INFO] Reconstructing {n_mc} simulated showers with iminuit...")
+    print(f"Reconstructing {n_mc} simulated showers with iminuit...")
     for _ in tqdm(range(n_mc)):
         xc_t = rng.uniform(-85.0, 85.0)
         yc_t = rng.uniform(-85.0, 85.0)
@@ -122,7 +122,7 @@ def run_benchmark(n_mc=250):
 
     r68 = np.percentile(dr_arr, 68)
     psi68 = np.percentile(dpsi_arr, 68)
-    print(f"[RESULT] Core resolution (68%): {r68:.2f} m | Angular PSF (68%): {psi68:.2f} deg")
+    print(f"Core resolution (68%): {r68:.2f} m | Angular PSF (68%): {psi68:.2f} deg")
 
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(14.5, 4.5))
 
@@ -154,7 +154,6 @@ def run_benchmark(n_mc=250):
     plt.tight_layout()
     plt.savefig("plots/reconstruction_performance.png")
     plt.close()
-    print("[INFO] Saved plots/reconstruction_performance.png")
 
 if __name__ == "__main__":
     run_benchmark()
