@@ -116,4 +116,4 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.savefig("plots/array_event_footprint.png")
     plt.close()
-    print("[INFO] Saved plots/array_event_footprint.png")
+    print("Saved plots/array_event_footprint.png")
